@@ -22,7 +22,6 @@ public class ShopTask extends BukkitRunnable {
     public void run() {
         if (!inv.getViewers().contains(owner)) {
             cancel();
-            System.out.println("Terminated task for " + owner.getName());
             return;
         }
         ItemStack[] currContents = inv.getContents();
