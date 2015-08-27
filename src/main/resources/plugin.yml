@@ -2,3 +2,4 @@ name: ChaosShop
 author: vemacs
 version: ${project.version}
 main: org.chaospvp.shop.ChaosShop
+depend: [Vault]
