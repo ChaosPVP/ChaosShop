@@ -77,8 +77,6 @@ public class ShopListener implements Listener {
             }
             if (didReturn) {
                 p.sendMessage(CHAT_PREFIX + ChatColor.YELLOW + "No items were sold. All items were returned.");
-            } else {
-                p.sendMessage(CHAT_PREFIX + ChatColor.YELLOW + "No items were sold.");
             }
         }
     }
