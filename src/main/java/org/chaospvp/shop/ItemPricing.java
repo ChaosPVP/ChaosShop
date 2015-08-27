@@ -27,7 +27,7 @@ public class ItemPricing {
     public int getPriceFor(ItemStack is) {
         Material type = is.getType();
         if (!typePricing.containsKey(type)) {
-            return -1;
+            return Integer.MIN_VALUE;
         }
         return typePricing.get(type) * is.getAmount();
     }
