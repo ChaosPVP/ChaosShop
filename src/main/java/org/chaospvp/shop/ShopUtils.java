@@ -20,7 +20,7 @@ public class ShopUtils {
     public static final int SELL_INDEX = 53;
 
     public static ItemStack generateCloseItem() {
-        ItemStack closeItem = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 6);
+        ItemStack closeItem = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14);
         ItemMeta meta = closeItem.getItemMeta();
         meta.setDisplayName(CLOSE_DISPLAYNAME);
         meta.setLore(Collections.singletonList(
