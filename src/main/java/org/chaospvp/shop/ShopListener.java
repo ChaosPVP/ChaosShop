@@ -23,8 +23,8 @@ public class ShopListener implements Listener {
             event.setCancelled(true);
             Inventory inventory = Bukkit.createInventory(event.getPlayer(),
                     54, INVENTORY_PREFIX);
-            inventory.setItem(45, ShopUtils.generateCloseItem());
-            inventory.setItem(53, ShopUtils.generateSellItem(0));
+            inventory.setItem(ShopUtils.CLOSE_INDEX, ShopUtils.generateCloseItem());
+            inventory.setItem(ShopUtils.SELL_INDEX, ShopUtils.generateSellItem(0));
             new ShopTask(inventory, event.getPlayer()).runTaskTimer(ChaosShop.getInstance(), 5, 5);
             event.getPlayer().openInventory(inventory);
         }
@@ -38,10 +38,10 @@ public class ShopListener implements Listener {
         if (e.getCurrentItem() != null) {
             if (invName.equals(INVENTORY_PREFIX)) {
                 int slot = e.getSlot();
-                if (slot == 45) {
+                if (slot == ShopUtils.CLOSE_INDEX) {
                     e.setCancelled(true);
                     p.closeInventory();
-                } else if (slot == 53) {
+                } else if (slot == ShopUtils.SELL_INDEX) {
                     e.setCancelled(true);
                     int total = ShopUtils.updateInventory(inv, p);
                     if (total == 0) {
@@ -65,7 +65,7 @@ public class ShopListener implements Listener {
         if (invName.equals(INVENTORY_PREFIX)) {
             boolean didReturn = false;
             for (int i = 0; i < 54; i++) {
-                if (i == 45 || i == 53) continue;
+                if (i == ShopUtils.CLOSE_INDEX || i == ShopUtils.SELL_INDEX) continue;
                 ItemStack is = inv.getItem(i);
                 if (is == null || is.getType() == Material.AIR) continue;
                 if (ShopUtils.checkInventory(p, is)) {

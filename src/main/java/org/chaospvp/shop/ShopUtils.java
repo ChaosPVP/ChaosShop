@@ -16,6 +16,9 @@ public class ShopUtils {
     private static final String SELL_ALL_DISPLAYNAME = ChatColor.GREEN + "" + ChatColor.BOLD + "Sell All";
     private static final String CLOSE_DISPLAYNAME = ChatColor.RED + "" + ChatColor.BOLD + "Close";
 
+    public static final int CLOSE_INDEX = 45;
+    public static final int SELL_INDEX = 53;
+
     public static ItemStack generateCloseItem() {
         ItemStack closeItem = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 6);
         ItemMeta meta = closeItem.getItemMeta();
@@ -40,7 +43,7 @@ public class ShopUtils {
         int totalPrice = 0;
         List<ItemStack> leftovers = new ArrayList<>();
         for (int i = 0; i < 54; i++) {
-            if (i == 45 || i == 53) continue;
+            if (i == CLOSE_INDEX || i == SELL_INDEX) continue;
             ItemStack is = inv.getItem(i);
             if (is == null || is.getType() == Material.AIR) continue;
             int price = ChaosShop.getInstance().getPricing().getPriceFor(is);
@@ -51,7 +54,7 @@ public class ShopUtils {
                 totalPrice += price;
             }
         }
-        inv.setItem(53, generateSellItem(totalPrice));
+        inv.setItem(SELL_INDEX, generateSellItem(totalPrice));
         owner.updateInventory();
         for (ItemStack leftover : leftovers) {
             if (checkInventory(owner, leftover)) {
