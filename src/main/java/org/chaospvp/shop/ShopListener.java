@@ -52,6 +52,7 @@ public class ShopListener implements Listener {
                     if (total == 0) {
                         p.sendMessage(ChatColor.RED + "No items were sold.");
                     } else {
+                        inv.clear();
                         p.sendMessage(ChatColor.GREEN + "Sold all items for " + ChatColor.YELLOW + "$" + total);
                         // TODO: give player money
                     }
