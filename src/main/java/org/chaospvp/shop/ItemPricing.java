@@ -3,6 +3,7 @@ package org.chaospvp.shop;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,5 +24,11 @@ public class ItemPricing {
         }
     }
 
-
+    public int getPriceFor(ItemStack is) {
+        Material type = is.getType();
+        if (!typePricing.containsKey(type)) {
+            return -1;
+        }
+        return typePricing.get(type) * is.getAmount();
+    }
 }

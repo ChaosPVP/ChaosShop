@@ -9,30 +9,26 @@ import java.util.Arrays;
 
 public class ShopTask extends BukkitRunnable {
     private final Inventory inv;
-    private final Player viewer;
+    private final Player owner;
 
     private ItemStack[] prevContents;
 
-    public ShopTask(Inventory inv, Player viewer) {
+    public ShopTask(Inventory inv, Player owner) {
         this.inv = inv;
-        this.viewer = viewer;
+        this.owner = owner;
     }
 
     @Override
     public void run() {
-        if (!inv.getViewers().contains(viewer)) {
+        if (!inv.getViewers().contains(owner)) {
             cancel();
+            System.out.println("Terminated task for " + owner.getName());
             return;
         }
         ItemStack[] currContents = inv.getContents();
         if (prevContents == null || !Arrays.equals(currContents, prevContents)) {
             prevContents = Arrays.copyOf(currContents, currContents.length);
-            for (int i = 0; i < 54; i++) {
-                if (i == 45 || i == 53) {
-                    continue;
-                }
-
-            }
+            ShopUtils.updateInventory(inv, owner);
         }
     }
 }

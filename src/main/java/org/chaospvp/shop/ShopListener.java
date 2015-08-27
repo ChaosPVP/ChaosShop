@@ -30,6 +30,7 @@ public class ShopListener implements Listener {
                     54, INVENTORY_PREFIX);
             inventory.setItem(45, ShopUtils.generateCloseItem());
             inventory.setItem(53, ShopUtils.generateSellItem(0));
+            new ShopTask(inventory, event.getPlayer()).runTaskTimer(ChaosShop.getInstance(), 5, 5);
             event.getPlayer().openInventory(inventory);
         }
     }
@@ -40,62 +41,20 @@ public class ShopListener implements Listener {
         final Player p = (Player) e.getWhoClicked();
         String invName = inv.getName();
         if (e.getCurrentItem() != null) {
-            if (invName.startsWith(INVENTORY_PREFIX)) {
+            if (invName.equals(INVENTORY_PREFIX)) {
                 int slot = e.getSlot();
                 if (slot == 45) {
                     e.setCancelled(true);
                     p.closeInventory();
                 } else if (slot == 53) {
                     e.setCancelled(true);
-                    int leftover = 0;
-                    long balance = 0L;
-                    int total = 0;
-                    int success = 0;
-                    List<ItemStack> leftovers = new ArrayList<>();
-                    for (int i = 0; i < 54; i++) {
-                        if (i == 45 || i == 53) {
-                            continue;
-                        }
-                        ItemStack is = inv.getItem(i);
-                        if (is != null && !is.getType().equals(Material.AIR)) {
-                            int price = 420; // get price here
-
-                            if (price == -1) {
-                                leftover += is.getAmount();
-                                total += is.getAmount();
-                                leftovers.add(is);
-                                inv.remove(is);
-                            } else {
-                                int add = price * is.getAmount();
-
-                                balance += (long) add;
-                                total += is.getAmount();
-                                success += is.getAmount();
-                                inv.remove(is);
-                            }
-                        }
-                    }
-
-                    if (leftover > 0) {
-                        p.sendMessage(ChatColor.GOLD + String.valueOf(leftover)
-                                + ChatColor.RED + " items could not be sold they were returned to your inventory!");
-                        for (ItemStack i : leftovers) {
-                            if (i != null) {
-                                p.getInventory().addItem(i);
-                            }
-                        }
-                    }
-
+                    int total = ShopUtils.updateInventory(inv, p);
                     if (total == 0) {
-                        p.sendMessage(ChatColor.RED + "Inventory was empty, no items were sold.");
+                        p.sendMessage(ChatColor.RED + "No items were sold.");
+                    } else {
+                        p.sendMessage(ChatColor.GREEN + "Sold all items for " + ChatColor.YELLOW + "$" + total);
+                        // TODO: give player money
                     }
-
-                    if (success > 0) {
-                        p.sendMessage(ChatColor.GOLD + String.valueOf(success) + ChatColor.GREEN
-                                + " items sold for " + ChatColor.GOLD + balance + ChatColor.GREEN + "$");
-                    }
-
-                    // TODO: give player money
                     p.closeInventory();
                 }
             }
@@ -107,20 +66,21 @@ public class ShopListener implements Listener {
         Player p = (Player) e.getPlayer();
         Inventory inv = e.getInventory();
         String invName = inv.getName();
-        if (invName.startsWith(INVENTORY_PREFIX)) {
-            boolean hasLeftover = false;
+        if (invName.equals(INVENTORY_PREFIX)) {
+            boolean didReturn = false;
             for (int i = 0; i < 54; i++) {
-                if (i == 45 || i == 53) {
-                    continue;
-                }
+                if (i == 45 || i == 53) continue;
                 ItemStack is = inv.getItem(i);
-                if (is != null && !is.getType().equals(Material.AIR)) {
+                if (is == null || is.getType() == Material.AIR) continue;
+                if (ShopUtils.checkInventory(p, is)) {
                     p.getInventory().addItem(is);
-                    hasLeftover = true;
+                } else {
+                    p.getWorld().dropItem(p.getLocation(), is);
                 }
+                didReturn = true;
             }
-            if (hasLeftover) {
-                p.sendMessage(ChatColor.RED + "You left some items in the shop, they have been returned to your inventory!");
+            if (didReturn) {
+                p.sendMessage(ChatColor.RED + "Returned non-sold items.");
             }
         }
     }
