@@ -21,7 +21,7 @@ public class ShopUtils {
         ItemMeta meta = closeItem.getItemMeta();
         meta.setDisplayName(CLOSE_DISPLAYNAME);
         meta.setLore(Collections.singletonList(
-                ChatColor.GRAY + "" + ChatColor.ITALIC + "Closes inventory and gives back items"));
+                ChatColor.GRAY + "" + ChatColor.ITALIC + "Returns items back to your inventory"));
         closeItem.setItemMeta(meta);
         return closeItem;
     }
@@ -30,7 +30,8 @@ public class ShopUtils {
         ItemStack sellAllItem = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5);
         ItemMeta meta = sellAllItem.getItemMeta();
         meta.setDisplayName(SELL_ALL_DISPLAYNAME);
-        meta.setLore(Collections.singletonList(ChatColor.YELLOW + "" + ChatColor.ITALIC + "$" + price));
+        meta.setLore(Collections.singletonList(ChatColor.GRAY + "" + ChatColor.ITALIC + "Value: "
+                + ChatColor.YELLOW + "" + ChatColor.ITALIC + "$" + price));
         sellAllItem.setItemMeta(meta);
         return sellAllItem;
     }
