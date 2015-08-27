@@ -7,20 +7,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class ShopListener implements Listener {
     private static final String INVENTORY_PREFIX = ChatColor.DARK_BLUE + "Sell Shop";
+    private static final String CHAT_PREFIX = ChatColor.translateAlternateColorCodes('&', "&8[&f&lChaos&4&lShop&8] &r");
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
@@ -50,11 +45,11 @@ public class ShopListener implements Listener {
                     e.setCancelled(true);
                     int total = ShopUtils.updateInventory(inv, p);
                     if (total == 0) {
-                        p.sendMessage(ChatColor.RED + "No items were sold.");
+                        p.sendMessage(CHAT_PREFIX + ChatColor.RED + "No items were sold.");
                     } else {
                         inv.clear();
                         ChaosShop.getInstance().addToBalance(p, total);
-                        p.sendMessage(ChatColor.GREEN + "Sold all items for " + ChatColor.YELLOW + "$" + total);
+                        p.sendMessage(CHAT_PREFIX + ChatColor.GREEN + "Sold all items for " + ChatColor.YELLOW + "$" + total);
                     }
                     p.closeInventory();
                 }
@@ -81,7 +76,7 @@ public class ShopListener implements Listener {
                 didReturn = true;
             }
             if (didReturn) {
-                p.sendMessage(ChatColor.RED + "No items were sold. All items were returned.");
+                p.sendMessage(CHAT_PREFIX + ChatColor.RED + "No items were sold. All items were returned.");
             }
         }
     }
