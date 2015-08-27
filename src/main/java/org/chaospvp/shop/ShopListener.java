@@ -7,15 +7,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ShopListener implements Listener {
     private static final String INVENTORY_PREFIX = ChatColor.DARK_BLUE + "Sell Items";
@@ -40,12 +42,22 @@ public class ShopListener implements Listener {
         Inventory inv = e.getInventory();
         final Player p = (Player) e.getWhoClicked();
         String invName = inv.getName();
-        if (e.getCurrentItem() != null) {
-            if (invName.equals(INVENTORY_PREFIX)) {
+        ItemStack currentItem = e.getCurrentItem();
+        if (currentItem != null) {
+            if (e.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY && e.getSlot() != e.getRawSlot()) {
+                InventoryView openInventory = p.getOpenInventory();
+                if (openInventory != null) {
+                    Inventory topInventory = openInventory.getTopInventory();
+                    if (topInventory != null && topInventory.getName().equals(INVENTORY_PREFIX)) {
+                        if (ChaosShop.getInstance().getPricing().getPriceFor(currentItem) == Integer.MIN_VALUE) {
+                            e.setCancelled(true);
+                        }
+                    }
+                }
+            } else if (invName.equals(INVENTORY_PREFIX)) {
                 int slot = e.getSlot();
                 if (slot == ShopUtils.CLOSE_INDEX) {
                     e.setCancelled(true);
-                    p.closeInventory();
                 } else if (slot == ShopUtils.SELL_INDEX) {
                     e.setCancelled(true);
                     int total = ShopUtils.updateInventory(inv, p);
@@ -57,8 +69,13 @@ public class ShopListener implements Listener {
                         p.sendMessage(CHAT_PREFIX + ChatColor.GREEN + "Sold all items for " +
                                 ChatColor.GOLD + "" + ChatColor.BOLD + "$" + total);
                     }
-                    p.closeInventory();
                 }
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        p.closeInventory();
+                    }
+                }.runTask(ChaosShop.getInstance());
             }
         }
     }
