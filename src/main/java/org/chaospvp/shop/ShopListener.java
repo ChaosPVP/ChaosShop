@@ -14,7 +14,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class ShopListener implements Listener {
-    private static final String INVENTORY_PREFIX = ChatColor.DARK_BLUE + "Sell Shop";
+    private static final String INVENTORY_PREFIX = ChatColor.DARK_BLUE + "Sell Items";
     private static final String CHAT_PREFIX = ChatColor.translateAlternateColorCodes('&', "&8[&f&lChaos&4&lShop&8] &r");
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
