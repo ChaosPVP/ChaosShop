@@ -53,8 +53,8 @@ public class ShopListener implements Listener {
                         p.sendMessage(ChatColor.RED + "No items were sold.");
                     } else {
                         inv.clear();
+                        ChaosShop.getInstance().addToBalance(p, total);
                         p.sendMessage(ChatColor.GREEN + "Sold all items for " + ChatColor.YELLOW + "$" + total);
-                        // TODO: give player money
                     }
                     p.closeInventory();
                 }
@@ -81,7 +81,7 @@ public class ShopListener implements Listener {
                 didReturn = true;
             }
             if (didReturn) {
-                p.sendMessage(ChatColor.RED + "Returned non-sold items.");
+                p.sendMessage(ChatColor.RED + "No items were sold. All items were returned.");
             }
         }
     }

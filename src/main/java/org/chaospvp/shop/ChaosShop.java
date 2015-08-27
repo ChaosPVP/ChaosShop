@@ -1,5 +1,6 @@
 package org.chaospvp.shop;
 
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ChaosShop extends JavaPlugin {
@@ -20,5 +21,9 @@ public class ChaosShop extends JavaPlugin {
 
     public ItemPricing getPricing() {
         return pricing;
+    }
+
+    public void addToBalance(Player p, int toAdd) {
+
     }
 }
