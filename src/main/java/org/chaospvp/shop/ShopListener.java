@@ -56,9 +56,12 @@ public class ShopListener implements Listener {
                 }
             } else if (invName.equals(INVENTORY_PREFIX)) {
                 int slot = e.getSlot();
+                boolean shouldClose = false;
                 if (slot == ShopUtils.CLOSE_INDEX) {
+                    shouldClose = true;
                     e.setCancelled(true);
                 } else if (slot == ShopUtils.SELL_INDEX) {
+                    shouldClose = true;
                     e.setCancelled(true);
                     int total = ShopUtils.updateInventory(inv, p);
                     if (total == 0) {
@@ -70,12 +73,14 @@ public class ShopListener implements Listener {
                                 ChatColor.GOLD + "" + ChatColor.BOLD + "$" + total);
                     }
                 }
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        p.closeInventory();
-                    }
-                }.runTask(ChaosShop.getInstance());
+                if (shouldClose) {
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            p.closeInventory();
+                        }
+                    }.runTask(ChaosShop.getInstance());
+                }
             }
         }
     }
