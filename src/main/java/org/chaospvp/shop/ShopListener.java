@@ -49,7 +49,8 @@ public class ShopListener implements Listener {
                     } else {
                         inv.clear();
                         ChaosShop.getInstance().addToBalance(p, total);
-                        p.sendMessage(CHAT_PREFIX + ChatColor.GREEN + "Sold all items for " + ChatColor.GOLD + "$" + total);
+                        p.sendMessage(CHAT_PREFIX + ChatColor.GREEN + "Sold all items for " +
+                                ChatColor.GOLD + "" + ChatColor.BOLD + "$" + total);
                     }
                     p.closeInventory();
                 }
