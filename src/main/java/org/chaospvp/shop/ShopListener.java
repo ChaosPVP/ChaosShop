@@ -13,6 +13,10 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class ShopListener implements Listener {
     private static final String INVENTORY_PREFIX = ChatColor.DARK_BLUE + "Sell Items";
     private static final String CHAT_PREFIX = ChatColor.translateAlternateColorCodes('&', "&8[&f&lChaos&4&lShop&8] &r");
@@ -66,17 +70,15 @@ public class ShopListener implements Listener {
         String invName = inv.getName();
         if (invName.equals(INVENTORY_PREFIX)) {
             boolean didReturn = false;
+            List<ItemStack> leftovers = new ArrayList<>();
             for (int i = 0; i < 54; i++) {
                 if (i == ShopUtils.CLOSE_INDEX || i == ShopUtils.SELL_INDEX) continue;
                 ItemStack is = inv.getItem(i);
                 if (is == null || is.getType() == Material.AIR) continue;
-                if (ShopUtils.checkInventory(p, is)) {
-                    p.getInventory().addItem(is);
-                } else {
-                    p.getWorld().dropItem(p.getLocation(), is);
-                }
+                leftovers.add(is);
                 didReturn = true;
             }
+            ShopUtils.dropLeftovers(leftovers, p);
             if (didReturn) {
                 p.sendMessage(CHAT_PREFIX + ChatColor.YELLOW + "No items were sold. All items were returned.");
             }

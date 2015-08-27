@@ -55,28 +55,16 @@ public class ShopUtils {
             }
         }
         inv.setItem(SELL_INDEX, generateSellItem(totalPrice));
+        dropLeftovers(leftovers, owner);
         owner.updateInventory();
-        for (ItemStack leftover : leftovers) {
-            if (checkInventory(owner, leftover)) {
-                owner.getInventory().addItem(leftover);
-            } else {
-                owner.getWorld().dropItem(owner.getLocation(), leftover);
-            }
-        }
-
         return totalPrice;
     }
 
-    public static boolean checkInventory(Player p, ItemStack item) {
-        if (p.getInventory().firstEmpty() >= 0 && item.getAmount() <= item.getMaxStackSize()) {
-            return true;
+    public static void dropLeftovers(List<ItemStack> leftovers, Player p) {
+        Map<Integer, ItemStack> toDrop = p.getInventory()
+                .addItem(leftovers.toArray(new ItemStack[leftovers.size()]));
+        for (Map.Entry<Integer, ItemStack> entry : toDrop.entrySet()) {
+            p.getWorld().dropItemNaturally(p.getLocation(), entry.getValue());
         }
-        Map<Integer, ? extends ItemStack> items = p.getInventory().all(item.getType());
-        int amount = item.getAmount();
-        for (ItemStack i : items.values()) {
-            amount -= i.getMaxStackSize() - i.getAmount();
-        }
-        return amount <= 0; // more than 0 means there are items that can't be placed
     }
-
 }
