@@ -26,7 +26,7 @@ public class ShopListener implements Listener {
                     54, INVENTORY_PREFIX);
             inventory.setItem(ShopUtils.CLOSE_INDEX, ShopUtils.generateCloseItem());
             inventory.setItem(ShopUtils.SELL_INDEX, ShopUtils.generateSellItem(0));
-            new ShopTask(inventory, event.getPlayer()).runTaskTimer(ChaosShop.getInstance(), 5, 5);
+            new ShopTask(inventory, event.getPlayer()).runTaskTimer(ChaosShop.getInstance(), 1, 1);
             event.getPlayer().openInventory(inventory);
         }
     }
