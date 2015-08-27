@@ -5,9 +5,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Arrays;
+
 public class ShopTask extends BukkitRunnable {
     private final Inventory inv;
     private final Player owner;
+
+    private ItemStack[] prevContents;
 
     public ShopTask(Inventory inv, Player owner) {
         this.inv = inv;
@@ -20,6 +24,10 @@ public class ShopTask extends BukkitRunnable {
             cancel();
             return;
         }
-        ShopUtils.updateInventory(inv, owner);
+        ItemStack[] currContents = inv.getContents();
+        if (prevContents == null || !Arrays.equals(currContents, prevContents)) {
+            prevContents = Arrays.copyOf(currContents, currContents.length);
+            ShopUtils.updateInventory(inv, owner);
+        }
     }
 }
