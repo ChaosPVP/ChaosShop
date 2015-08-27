@@ -45,11 +45,11 @@ public class ShopListener implements Listener {
                     e.setCancelled(true);
                     int total = ShopUtils.updateInventory(inv, p);
                     if (total == 0) {
-                        p.sendMessage(CHAT_PREFIX + ChatColor.RED + "No items were sold.");
+                        p.sendMessage(CHAT_PREFIX + ChatColor.YELLOW + "No items were sold.");
                     } else {
                         inv.clear();
                         ChaosShop.getInstance().addToBalance(p, total);
-                        p.sendMessage(CHAT_PREFIX + ChatColor.GREEN + "Sold all items for " + ChatColor.YELLOW + "$" + total);
+                        p.sendMessage(CHAT_PREFIX + ChatColor.GREEN + "Sold all items for " + ChatColor.GOLD + "$" + total);
                     }
                     p.closeInventory();
                 }
@@ -77,6 +77,8 @@ public class ShopListener implements Listener {
             }
             if (didReturn) {
                 p.sendMessage(CHAT_PREFIX + ChatColor.YELLOW + "No items were sold. All items were returned.");
+            } else {
+                p.sendMessage(CHAT_PREFIX + ChatColor.YELLOW + "No items were sold.");
             }
         }
     }
