@@ -19,7 +19,7 @@ public class ItemPricing {
                 Material type = Material.valueOf(key.toUpperCase());
                 typePricing.put(type, cs.getInt(key));
             } catch (Throwable t) {
-                ChaosShop.getInstance().getLogger().info("Error loading material: " + key);
+                ChaosShop.getInstance().getLogger().severe("Error loading material: " + key);
             }
         }
     }
