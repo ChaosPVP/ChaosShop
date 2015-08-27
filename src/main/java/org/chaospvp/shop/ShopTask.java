@@ -26,8 +26,8 @@ public class ShopTask extends BukkitRunnable {
         }
         ItemStack[] currContents = inv.getContents();
         if (prevContents == null || !Arrays.equals(currContents, prevContents)) {
-            prevContents = Arrays.copyOf(currContents, currContents.length);
             ShopUtils.updateInventory(inv, owner);
+            prevContents = Arrays.copyOf(inv.getContents(), inv.getContents().length);
         }
     }
 }
