@@ -3,3 +3,12 @@ author: vemacs
 version: ${project.version}
 main: org.chaospvp.shop.ChaosShop
 depend: [Vault]
+commands:
+  chaosshop:
+    description: ChaosShop administration command
+    permission: chaosshop.reload
+    usage: /chaosshop reload
+permissions:
+  chaosshop.reload:
+    default: op
+    

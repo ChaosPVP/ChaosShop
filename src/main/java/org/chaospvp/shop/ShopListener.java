@@ -19,7 +19,8 @@ public class ShopListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        if (event.getMessage().equals("/sell")) {
+        String msg = event.getMessage();
+        if (msg.equals("/sell") || msg.equals("/sellall")) {
             event.setCancelled(true);
             Inventory inventory = Bukkit.createInventory(event.getPlayer(),
                     54, INVENTORY_PREFIX);
