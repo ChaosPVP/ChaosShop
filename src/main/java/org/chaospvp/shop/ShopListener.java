@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -18,42 +19,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ShopInventoryHandler implements Listener {
+public class ShopListener implements Listener {
     private static final String INVENTORY_PREFIX = ChatColor.DARK_BLUE + "Sell Shop";
-    private static final String SELL_ALL_DISPLAYNAME = ChatColor.GREEN + "" + ChatColor.BOLD + "Sell All";
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        String message = event.getMessage();
-        System.out.println(message);
-        if (event.getMessage().contains("fake-shop")) {
+        if (event.getMessage().equals("/sell")) {
+            event.setCancelled(true);
             Inventory inventory = Bukkit.createInventory(event.getPlayer(),
                     54, INVENTORY_PREFIX);
-            for (int i = 45; i < 53; i++) {
-                inventory.setItem(i, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15));
-            }
-            inventory.setItem(53, generateSellItem());
+            inventory.setItem(45, ShopUtils.generateCloseItem());
+            inventory.setItem(53, ShopUtils.generateSellItem(0));
             event.getPlayer().openInventory(inventory);
         }
-    }
-
-    private ItemStack generateSellItem() {
-        ItemStack sellAllItem = new ItemStack(Material.PAPER);
-            ItemMeta meta = sellAllItem.getItemMeta();
-        meta.setDisplayName(SELL_ALL_DISPLAYNAME);
-        meta.setLore(Collections.singletonList(ChatColor.YELLOW + "" + ChatColor.ITALIC + "$4800"));
-        sellAllItem.setItemMeta(meta);
-        return sellAllItem;
-    }
-
-    private boolean isSellAllItem(ItemStack is) {
-        if (is == null || is.getType() != Material.PAPER || is.getAmount() != 1 || !is.hasItemMeta()) {
-            return false;
-        }
-        ItemMeta meta = is.getItemMeta();
-        return !(!meta.hasDisplayName() || !meta.hasLore())
-                && meta.getDisplayName().endsWith(SELL_ALL_DISPLAYNAME)
-                && meta.getLore().get(0).startsWith(ChatColor.GRAY + "$");
     }
 
     @EventHandler
@@ -62,29 +40,30 @@ public class ShopInventoryHandler implements Listener {
         final Player p = (Player) e.getWhoClicked();
         String invName = inv.getName();
         if (e.getCurrentItem() != null) {
-            ItemStack curr = e.getCurrentItem();
-            if (ChatColor.stripColor(invName).startsWith(INVENTORY_PREFIX)) {
-                if (e.getClick().equals(ClickType.RIGHT)) {
+            if (invName.startsWith(INVENTORY_PREFIX)) {
+                int slot = e.getSlot();
+                if (slot == 45) {
                     e.setCancelled(true);
-                    return;
-                }
-
-                if (isSellAllItem(curr)) {
+                    p.closeInventory();
+                } else if (slot == 53) {
                     e.setCancelled(true);
                     int leftover = 0;
                     long balance = 0L;
                     int total = 0;
                     int success = 0;
-                    List<ItemStack> leftOvers = new ArrayList<>();
-                    for (ItemStack is : inv.getContents()) {
-                        if (is != null && !is.getType().equals(Material.AIR)
-                                && !isSellAllItem(is)) {
+                    List<ItemStack> leftovers = new ArrayList<>();
+                    for (int i = 0; i < 54; i++) {
+                        if (i == 45 || i == 53) {
+                            continue;
+                        }
+                        ItemStack is = inv.getItem(i);
+                        if (is != null && !is.getType().equals(Material.AIR)) {
                             int price = 420; // get price here
 
                             if (price == -1) {
                                 leftover += is.getAmount();
                                 total += is.getAmount();
-                                leftOvers.add(is);
+                                leftovers.add(is);
                                 inv.remove(is);
                             } else {
                                 int add = price * is.getAmount();
@@ -100,7 +79,7 @@ public class ShopInventoryHandler implements Listener {
                     if (leftover > 0) {
                         p.sendMessage(ChatColor.GOLD + String.valueOf(leftover)
                                 + ChatColor.RED + " items could not be sold they were returned to your inventory!");
-                        for (ItemStack i : leftOvers) {
+                        for (ItemStack i : leftovers) {
                             if (i != null) {
                                 p.getInventory().addItem(i);
                             }
@@ -108,7 +87,7 @@ public class ShopInventoryHandler implements Listener {
                     }
 
                     if (total == 0) {
-                        p.sendMessage(ChatColor.RED + "Place items in before clicking to sell them!");
+                        p.sendMessage(ChatColor.RED + "Inventory was empty, no items were sold.");
                     }
 
                     if (success > 0) {
@@ -123,19 +102,19 @@ public class ShopInventoryHandler implements Listener {
         }
     }
 
-    private int getBalance(Iterable<ItemStack> contents) {
-        return 0;
-    }
-
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
         Player p = (Player) e.getPlayer();
         Inventory inv = e.getInventory();
         String invName = inv.getName();
-        if (ChatColor.stripColor(invName).startsWith(INVENTORY_PREFIX)) {
+        if (invName.startsWith(INVENTORY_PREFIX)) {
             boolean hasLeftover = false;
-            for (ItemStack is : inv.getContents()) {
-                if (is != null && !is.getType().equals(Material.AIR) && !isSellAllItem(is)) {
+            for (int i = 0; i < 54; i++) {
+                if (i == 45 || i == 53) {
+                    continue;
+                }
+                ItemStack is = inv.getItem(i);
+                if (is != null && !is.getType().equals(Material.AIR)) {
                     p.getInventory().addItem(is);
                     hasLeftover = true;
                 }
