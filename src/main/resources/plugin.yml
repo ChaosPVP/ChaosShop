@@ -1,0 +1,4 @@
+name: ChaosShop
+author: vemacs
+version: 4.2.0
+main: org.chaospvp.shop.ShopPlugin
