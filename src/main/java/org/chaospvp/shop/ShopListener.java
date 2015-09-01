@@ -50,7 +50,7 @@ public class ShopListener implements Listener {
                 if (openInventory != null) {
                     Inventory topInventory = openInventory.getTopInventory();
                     if (topInventory != null && topInventory.getName().equals(INVENTORY_PREFIX)) {
-                        if (ChaosShop.getInstance().getPricing().getPriceFor(currentItem) == Integer.MIN_VALUE) {
+                        if (ChaosShop.getPriceFor(currentItem) == Integer.MIN_VALUE) {
                             e.setCancelled(true);
                         }
                     }
@@ -65,7 +65,7 @@ public class ShopListener implements Listener {
                     shouldClose = true;
                     e.setCancelled(true);
                     if (e.getAction() == InventoryAction.SWAP_WITH_CURSOR &&
-                            ChaosShop.getInstance().getPricing().getPriceFor(e.getCursor()) != Integer.MIN_VALUE) {
+                            ChaosShop.getPriceFor(e.getCursor()) != Integer.MIN_VALUE) {
                         if (e.getClick() == ClickType.RIGHT) {
                             ItemStack realItem = e.getCursor().clone();
                             inv.addItem(realItem);

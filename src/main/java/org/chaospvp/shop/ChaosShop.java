@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ChaosShop extends JavaPlugin {
@@ -37,8 +38,8 @@ public class ChaosShop extends JavaPlugin {
         return instance;
     }
 
-    public ItemPricing getPricing() {
-        return pricing;
+    public static int getPriceFor(ItemStack is) {
+        return getInstance().pricing.getPriceFor(is);
     }
 
     public void addToBalance(Player p, int toAdd) {

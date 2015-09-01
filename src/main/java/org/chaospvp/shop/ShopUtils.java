@@ -46,7 +46,7 @@ public class ShopUtils {
             if (i == CLOSE_INDEX || i == SELL_INDEX) continue;
             ItemStack is = inv.getItem(i);
             if (is == null || is.getType() == Material.AIR) continue;
-            int price = ChaosShop.getInstance().getPricing().getPriceFor(is);
+            int price = ChaosShop.getPriceFor(is);
             if (price == Integer.MIN_VALUE) {
                 leftovers.add(is);
                 inv.remove(is);
