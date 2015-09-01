@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShopListener implements Listener {
-    private static final String INVENTORY_PREFIX = ChatColor.DARK_BLUE + "Sell Items";
+    private static final String INVENTORY_PREFIX = "Sell Items (shift-click to add)";
     private static final String CHAT_PREFIX = ChatColor.translateAlternateColorCodes('&', "&8[&f&lChaos&4&lShop&8] &r");
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
