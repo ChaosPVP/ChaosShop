@@ -64,7 +64,8 @@ public class ShopListener implements Listener {
                 } else if (slot == ShopUtils.SELL_INDEX) {
                     shouldClose = true;
                     e.setCancelled(true);
-                    if (e.getAction() == InventoryAction.SWAP_WITH_CURSOR) {
+                    if (e.getAction() == InventoryAction.SWAP_WITH_CURSOR &&
+                            ChaosShop.getInstance().getPricing().getPriceFor(e.getCursor()) != Integer.MIN_VALUE) {
                         if (e.getClick() == ClickType.RIGHT) {
                             ItemStack realItem = e.getCursor().clone();
                             inv.addItem(realItem);
