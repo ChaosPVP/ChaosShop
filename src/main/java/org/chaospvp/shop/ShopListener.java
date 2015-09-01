@@ -63,6 +63,11 @@ public class ShopListener implements Listener {
                 } else if (slot == ShopUtils.SELL_INDEX) {
                     shouldClose = true;
                     e.setCancelled(true);
+                    if (e.getAction() == InventoryAction.SWAP_WITH_CURSOR) {
+                        inv.addItem(e.getCursor());
+                        e.setCancelled(false);
+                        e.setCurrentItem(null);
+                    }
                     int total = ShopUtils.updateInventory(inv, p);
                     if (total == 0) {
                         p.sendMessage(CHAT_PREFIX + ChatColor.YELLOW + "No items were sold.");
