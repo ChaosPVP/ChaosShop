@@ -22,7 +22,12 @@ import java.util.List;
 
 public class ShopListener implements Listener {
     private static final String INVENTORY_PREFIX = "Sell Items (shift-click to add)";
-    private static final String CHAT_PREFIX = ChatColor.translateAlternateColorCodes('&', "&8[&f&lChaos&4&lShop&8] &r");
+    private static String CHAT_PREFIX;
+
+    public ShopListener() {
+        CHAT_PREFIX = ChatColor.translateAlternateColorCodes('&',
+                ChaosShop.getInstance().getConfig().getString("prefix", "&8[&f&lChaos&4&lShop&8]") + " &r");
+    }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
