@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ItemPricing {
-    private Map<Material, Integer> typePricing;
+    private Map<Material, Double> typePricing;
 
     public ItemPricing(FileConfiguration config) {
         typePricing = new HashMap<>();
@@ -17,7 +17,7 @@ public class ItemPricing {
         for (String key : cs.getKeys(false)) {
             try {
                 Material type = Material.valueOf(key.toUpperCase());
-                typePricing.put(type, cs.getInt(key));
+                typePricing.put(type, cs.getDouble(key));
             } catch (Throwable t) {
                 ChaosShop.getInstance().getLogger().severe("Error loading material: " + key);
             }
@@ -29,6 +29,6 @@ public class ItemPricing {
         if (!typePricing.containsKey(type)) {
             return Integer.MIN_VALUE;
         }
-        return typePricing.get(type) * is.getAmount();
+        return (int) Math.floor(typePricing.get(type) * (double) is.getAmount());
     }
 }
