@@ -26,7 +26,7 @@ public class ShopListener implements Listener {
 
     public ShopListener() {
         CHAT_PREFIX = ChatColor.translateAlternateColorCodes('&',
-                ChaosShop.getInstance().getConfig().getString("prefix", "&8[&f&lChaos&4&lShop&8]") + " &r");
+                ChaosShop.getInstance().getConfig().getString("prefix", "&8[&4&lChaos&f&lShop&8]") + " &r");
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
