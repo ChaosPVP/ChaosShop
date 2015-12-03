@@ -17,12 +17,12 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ShopListener implements Listener {
     private static final String INVENTORY_PREFIX = "Sell Items (shift-click to add)";
     private static String CHAT_PREFIX;
+    private Set<UUID> skipPlayers = new HashSet<>();
 
     public ShopListener() {
         CHAT_PREFIX = ChatColor.translateAlternateColorCodes('&',
@@ -103,12 +103,24 @@ public class ShopListener implements Listener {
         }
     }
 
+
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
         Player p = (Player) e.getPlayer();
+        final UUID uuid = p.getUniqueId();
+        if (skipPlayers.contains(uuid)) {
+            return;
+        }
         Inventory inv = e.getInventory();
         String invName = inv.getName();
         if (invName.equals(INVENTORY_PREFIX)) {
+            skipPlayers.add(uuid);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    skipPlayers.remove(uuid);
+                }
+            }.runTaskLater(ChaosShop.getInstance(), 1L);
             boolean didReturn = false;
             List<ItemStack> leftovers = new ArrayList<>();
             for (int i = 0; i < 54; i++) {
