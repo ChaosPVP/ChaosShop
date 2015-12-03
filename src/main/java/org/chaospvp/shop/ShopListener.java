@@ -22,7 +22,6 @@ import java.util.*;
 public class ShopListener implements Listener {
     private static final String INVENTORY_PREFIX = "Sell Items (shift-click to add)";
     private static String CHAT_PREFIX;
-    private Set<UUID> skipPlayers = new HashSet<>();
 
     public ShopListener() {
         CHAT_PREFIX = ChatColor.translateAlternateColorCodes('&',
@@ -110,19 +109,6 @@ public class ShopListener implements Listener {
         Inventory inv = e.getInventory();
         String invName = inv.getName();
         if (invName.equals(INVENTORY_PREFIX)) {
-            // fix double processing of item returning in same tick
-            final UUID uuid = p.getUniqueId();
-            if (skipPlayers.contains(uuid)) {
-                return;
-            }
-            skipPlayers.add(uuid);
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    skipPlayers.remove(uuid);
-                }
-            }.runTask(ChaosShop.getInstance()); // run at end of current tick
-
             boolean didReturn = false;
             List<ItemStack> leftovers = new ArrayList<>();
             for (int i = 0; i < 54; i++) {
@@ -132,6 +118,7 @@ public class ShopListener implements Listener {
                 leftovers.add(is);
                 didReturn = true;
             }
+            inv.clear();
             ShopUtils.dropLeftovers(leftovers, p);
             if (didReturn) {
                 p.sendMessage(CHAT_PREFIX + ChatColor.YELLOW + "No items were sold. All items were returned.");
