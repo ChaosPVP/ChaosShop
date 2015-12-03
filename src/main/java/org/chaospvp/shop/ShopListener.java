@@ -120,7 +120,7 @@ public class ShopListener implements Listener {
                 public void run() {
                     skipPlayers.remove(uuid);
                 }
-            }.runTaskLater(ChaosShop.getInstance(), 1L);
+            }.runTask(ChaosShop.getInstance());
             boolean didReturn = false;
             List<ItemStack> leftovers = new ArrayList<>();
             for (int i = 0; i < 54; i++) {
