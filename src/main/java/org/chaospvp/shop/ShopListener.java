@@ -107,20 +107,22 @@ public class ShopListener implements Listener {
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
         Player p = (Player) e.getPlayer();
-        final UUID uuid = p.getUniqueId();
-        if (skipPlayers.contains(uuid)) {
-            return;
-        }
         Inventory inv = e.getInventory();
         String invName = inv.getName();
         if (invName.equals(INVENTORY_PREFIX)) {
+            // fix double processing of item returning in same tick
+            final UUID uuid = p.getUniqueId();
+            if (skipPlayers.contains(uuid)) {
+                return;
+            }
             skipPlayers.add(uuid);
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     skipPlayers.remove(uuid);
                 }
-            }.runTask(ChaosShop.getInstance());
+            }.runTask(ChaosShop.getInstance()); // run at end of current tick
+
             boolean didReturn = false;
             List<ItemStack> leftovers = new ArrayList<>();
             for (int i = 0; i < 54; i++) {
