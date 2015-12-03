@@ -1,6 +1,6 @@
 name: ChaosShop
 author: vemacs
-version: ${project.version}
+version: ${project.version}-${git.branch}-${git.commit.id.abbrev}
 main: org.chaospvp.shop.ChaosShop
 depend: [Vault]
 commands:
