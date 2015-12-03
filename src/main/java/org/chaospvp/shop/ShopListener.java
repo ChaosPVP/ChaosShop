@@ -102,7 +102,6 @@ public class ShopListener implements Listener {
         }
     }
 
-
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
         Player p = (Player) e.getPlayer();
